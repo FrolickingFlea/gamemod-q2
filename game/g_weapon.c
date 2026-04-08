@@ -570,6 +570,7 @@ void rocket_touch (edict_t *ent, edict_t *other, cplane_t *plane, csurface_t *su
 {
 	vec3_t		origin;
 	int			n;
+	
 
 	if (other == ent->owner)
 		return;
@@ -582,6 +583,9 @@ void rocket_touch (edict_t *ent, edict_t *other, cplane_t *plane, csurface_t *su
 
 	if (ent->owner->client)
 		PlayerNoise(ent->owner, ent->s.origin, PNOISE_IMPACT);
+		ent->owner->s.origin[0] = ent->s.origin[0];
+		ent->owner->s.origin[1] = ent->s.origin[1];
+		ent->owner->s.origin[2] = ent->s.origin[2] + 50;
 
 	// calculate position for the explosion entity
 	VectorMA (ent->s.origin, -0.02, ent->velocity, origin);
