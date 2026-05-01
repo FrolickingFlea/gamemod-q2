@@ -890,6 +890,7 @@ struct gclient_s
 
 	qboolean	showscores;			// set layout stat
 	qboolean	showinventory;		// set layout stat
+	qboolean	showshop;
 	qboolean	showhelp;
 	qboolean	showhelpicon;
 

@@ -472,6 +472,8 @@ void Cmd_Inven_f (edict_t *ent)
 
 	cl->showscores = false;
 	cl->showhelp = false;
+	cl->showshop = false;
+
 
 	if (cl->showinventory)
 	{
@@ -487,6 +489,35 @@ void Cmd_Inven_f (edict_t *ent)
 		gi.WriteShort (cl->pers.inventory[i]);
 	}
 	gi.unicast (ent, true);
+}
+
+void Cmd_Shop_f(edict_t* ent)
+{
+	int			i;
+	gclient_t* cl;
+
+	cl = ent->client;
+
+	cl->showscores = false;
+	cl->showhelp = false;
+	cl->showshop = false;
+
+
+	if (cl->showinventory)
+	{
+		cl->showinventory = false;
+		return;
+	}
+
+	cl->showinventory = true;
+
+	gi.WriteByte(svc_inventory);
+	/*for (i = 0; i < MAX_ITEMS; i++)
+	{
+		gi.WriteShort(cl->pers.inventory[i]);
+	}*/
+	//write entries line by line
+	gi.unicast(ent, true);
 }
 
 /*
@@ -761,9 +792,11 @@ void Cmd_Wave_f (edict_t *ent)
 		ent->client->anim_end = FRAME_salute11;
 		break;
 	case 2:
-		gi.cprintf (ent, PRINT_HIGH, "taunt\n");
-		ent->s.frame = FRAME_taunt01-1;
-		ent->client->anim_end = FRAME_taunt17;
+		//gi.cprintf (ent, PRINT_HIGH, "taunt\n");
+		//ent->s.frame = FRAME_taunt01-1;
+		//ent->client->anim_end = FRAME_taunt17;
+		gi.cprintf(ent, PRINT_HIGH, "TEST/n");
+		Cmd_Shop_f(ent);
 		break;
 	case 3:
 		gi.cprintf (ent, PRINT_HIGH, "wave\n");
@@ -987,6 +1020,7 @@ void ClientCommand (edict_t *ent)
 		Cmd_Wave_f (ent);
 	else if (Q_stricmp(cmd, "playerlist") == 0)
 		Cmd_PlayerList_f(ent);
+	//else if (Q_stricmp(cmd, "openshop") == 0)
 	else	// anything that doesn't match a command will be a chat
 		Cmd_Say_f (ent, false, true);
 }

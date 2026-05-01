@@ -304,7 +304,10 @@ void HelpComputer (edict_t *ent)
 	char	string[1024];
 	char	*sk;
 
-	if (skill->value == 0)
+	if (deathmatch == 1) {
+		sk = "co-op";
+	}
+	else if (skill->value == 0)
 		sk = "easy";
 	else if (skill->value == 1)
 		sk = "medium";
@@ -319,16 +322,17 @@ void HelpComputer (edict_t *ent)
 		"xv 202 yv 12 string2 \"%s\" "		// skill
 		"xv 0 yv 24 cstring2 \"%s\" "		// level name
 		"xv 0 yv 54 cstring2 \"%s\" "		// help 1
-		"xv 0 yv 110 cstring2 \"%s\" "		// help 2
-		"xv 50 yv 164 string2 \" kills     goals    secrets\" "
-		"xv 50 yv 172 string2 \"%3i/%3i     %i/%i       %i/%i\" ", 
+		"xv 0 yv 110 cstring2 \"%s\" ",		// help 2
+		//"xv 50 yv 164 string2 \" kills     goals    secrets\" "
+		//"xv 50 yv 172 string2 \"%3i/%3i     %i/%i       %i/%i\" ", 
 		sk,
-		level.level_name,
-		game.helpmessage1,
-		game.helpmessage2,
-		level.killed_monsters, level.total_monsters, 
-		level.found_goals, level.total_goals,
-		level.found_secrets, level.total_secrets);
+		"Wild West Defense",
+		"Defend your base against\nenemy monsters",
+		"Use a the shop to purchase\ntools for your defense\nwith the K key"
+		//level.killed_monsters, 999, //monster kills
+		//0, 1, //level goals
+		//0, 0
+		); //secrets found
 
 	gi.WriteByte (svc_layout);
 	gi.WriteString (string);
@@ -346,14 +350,16 @@ Display the current help message
 void Cmd_Help_f (edict_t *ent)
 {
 	// this is for backwards compatability
-	if (deathmatch->value)
-	{
-		Cmd_Score_f (ent);
-		return;
-	}
+	//if (deathmatch->value)
+	//{
+	//	Cmd_Score_f (ent);
+	//	return;
+	//}
 
 	ent->client->showinventory = false;
 	ent->client->showscores = false;
+	ent->client->showshop = false;
+
 
 	if (ent->client->showhelp && (ent->client->pers.game_helpchanged == game.helpchanged))
 	{
