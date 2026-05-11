@@ -1636,10 +1636,12 @@ void ClientThink (edict_t *ent, usercmd_t *ucmd)
 		client->ps.pmove = pm.s;
 		client->old_pmove = pm.s;
 
+		
+
 		for (i=0 ; i<3 ; i++)
 		{
-			ent->s.origin[i] = pm.s.origin[i]*0.125;
-			ent->velocity[i] = pm.s.velocity[i]*0.125;
+			ent->s.origin[i] = pm.s.origin[i]*ent->moveMultiplier;
+			ent->velocity[i] = pm.s.velocity[i]*ent->moveMultiplier;
 		}
 
 		VectorCopy (pm.mins, ent->mins);
@@ -1806,7 +1808,7 @@ void ClientBeginServerFrame (edict_t *ent)
 
 void umount(edict_t *ent) {
 	onMount = 0;
-
+	ent->moveMultiplier = 0.125f;
 
 
 	//unmatch horse and player
@@ -1841,4 +1843,5 @@ void trymount(edict_t *ent) {
 	ent->riding->rider = ent;
 	
 	onMount = 1;
+	ent->moveMultiplier = 0.25f;
 }

@@ -1068,6 +1068,7 @@ struct edict_s
 	int canRide;
 	edict_t *rider;
 	edict_t* riding;
+	int moveMultiplier;
 	
 
 	float		powerarmor_time;

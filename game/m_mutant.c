@@ -679,5 +679,6 @@ void think(edict_t *self) {
 		//snap to player
 		for (int i = 0; i < 3; i++) {
 			self->s.origin[i] = self->rider->s.origin[i];
+			VectorCopy(self->rider->s.angles, self->s.angles);
 		}
 }
