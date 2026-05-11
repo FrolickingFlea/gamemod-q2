@@ -47,6 +47,7 @@ static int	sound_thud;
 // SOUNDS
 //
 
+
 void mutant_step (edict_t *self)
 {
 	int		n;
@@ -630,7 +631,7 @@ void SP_monster_mutant (edict_t *self)
 	sound_step3 = gi.soundindex ("mutant/step3.wav");
 	sound_thud = gi.soundindex ("mutant/thud1.wav");
 	
-	self->movetype = MOVETYPE_STEP;
+	self->movetype = MOVETYPE_NONE;
 	self->solid = SOLID_BBOX;
 	self->s.modelindex = gi.modelindex ("models/monsters/mutant/tris.md2");
 	VectorSet (self->mins, -32, -32, -24);
@@ -640,19 +641,22 @@ void SP_monster_mutant (edict_t *self)
 	self->gib_health = -120;
 	self->mass = 300;
 
+	self->canRide = 1;
+
 	self->pain = mutant_pain;
 	self->die = mutant_die;
+	self->think = think;
 
 	self->monsterinfo.stand = mutant_stand;
 	self->monsterinfo.walk = mutant_walk;
 	self->monsterinfo.run = mutant_run;
 	self->monsterinfo.dodge = NULL;
-	self->monsterinfo.attack = mutant_jump;
-	self->monsterinfo.melee = mutant_melee;
-	self->monsterinfo.sight = mutant_sight;
-	self->monsterinfo.search = mutant_search;
+	self->monsterinfo.attack = NULL;
+	self->monsterinfo.melee = NULL;
+	self->monsterinfo.sight = NULL;
+	self->monsterinfo.search = NULL;
 	self->monsterinfo.idle = mutant_idle;
-	self->monsterinfo.checkattack = mutant_checkattack;
+	self->monsterinfo.checkattack = NULL;
 
 	gi.linkentity (self);
 	
@@ -660,4 +664,20 @@ void SP_monster_mutant (edict_t *self)
 
 	self->monsterinfo.scale = MODEL_SCALE;
 	walkmonster_start (self);
+
+
+	//add to global mount list
+	availableMounts[nextMountSlotFree] = self;
+	nextMountSlotFree++;
+	if (nextMountSlotFree == MAX_MOUNTS) {
+		nextMountSlotFree = 0;
+	}
+}
+
+void think(edict_t *self) {
+	if(self->canRide == 1 && self->rider != NULL){
+		//snap to player
+		for (int i = 0; i < 3; i++) {
+			self->s.origin[i] = self->rider->s.origin[i];
+		}
 }

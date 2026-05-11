@@ -1803,3 +1803,42 @@ void ClientBeginServerFrame (edict_t *ent)
 
 	client->latched_buttons = 0;
 }
+
+void umount(edict_t *ent) {
+	onMount = 0;
+
+
+
+	//unmatch horse and player
+	ent->riding->rider = NULL;
+	ent->riding = NULL;
+}
+
+void trymount(edict_t *ent) {
+	edict_t* enttotrymounton;
+
+	//find nearest mount below
+	for (int i = 0; i < MAX_MOUNTS; i++) {
+		enttotrymounton = availableMounts[i];
+		if (enttotrymounton != NULL) {
+
+			//distance check, uses lazy dist check to avoid sqrt operations
+			int dist = ((enttotrymounton->s.origin[0] - ent->s.origin[0]) + (enttotrymounton->s.origin[1] - ent->s.origin[1])) * 1.5f;
+			if (abs(dist) <= 50){
+				//break, mount logic
+				break;
+			}
+		}
+	}
+	//
+
+	if (enttotrymounton == NULL) {
+		//this shouldn't happen, no horses?
+		return;
+	}
+
+	ent->riding = enttotrymounton;
+	ent->riding->rider = ent;
+	
+	onMount = 1;
+}

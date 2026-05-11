@@ -1,20 +1,13 @@
 ﻿C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Microsoft\VC\v160\Microsoft.CppBuild.targets(499,5): warning MSB8004: Output Directory does not end with a trailing slash.  This build instance will add the slash as it is required to allow proper evaluation of the Output Directory.
-  g_cmds.c
-C:\Users\brpro\git\gamemod-q2\game\g_cmds.c(34,8): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Users\brpro\git\gamemod-q2\game\g_cmds.c(57,9): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Users\brpro\git\gamemod-q2\game\g_cmds.c(58,9): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Users\brpro\git\gamemod-q2\game\g_cmds.c(496,8): warning C4101: 'i': unreferenced local variable
-C:\Users\brpro\git\gamemod-q2\game\g_cmds.c(753,11): warning C4996: 'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Users\brpro\git\gamemod-q2\game\g_cmds.c(756,10): warning C4996: 'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Users\brpro\git\gamemod-q2\game\g_cmds.c(841,10): warning C4996: 'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Users\brpro\git\gamemod-q2\game\g_cmds.c(842,10): warning C4996: 'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Users\brpro\git\gamemod-q2\game\g_cmds.c(843,10): warning C4996: 'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Users\brpro\git\gamemod-q2\game\g_cmds.c(854,9): warning C4996: 'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Users\brpro\git\gamemod-q2\game\g_cmds.c(861,8): warning C4996: 'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Users\brpro\git\gamemod-q2\game\g_cmds.c(908,13): warning C4459: declaration of 'st' hides global declaration
-C:\Users\brpro\git\gamemod-q2\game\g_local.h(456,21): message : see declaration of 'st'
-C:\Users\brpro\git\gamemod-q2\game\g_cmds.c(930,9): warning C4996: 'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Users\brpro\git\gamemod-q2\game\g_cmds.c(918,3): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Users\brpro\git\gamemod-q2\game\g_cmds.c(926,4): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  m_mutant.c
+C:\Users\brpro\git\gamemod-q2\game\m_mutant.c(62,44): warning C4100: 'other': unreferenced formal parameter
+C:\Users\brpro\git\gamemod-q2\game\m_mutant.c(308,85): warning C4100: 'surf': unreferenced formal parameter
+C:\Users\brpro\git\gamemod-q2\game\m_mutant.c(308,66): warning C4100: 'plane': unreferenced formal parameter
+C:\Users\brpro\git\gamemod-q2\game\m_mutant.c(496,66): warning C4100: 'damage': unreferenced formal parameter
+C:\Users\brpro\git\gamemod-q2\game\m_mutant.c(496,56): warning C4100: 'kick': unreferenced formal parameter
+C:\Users\brpro\git\gamemod-q2\game\m_mutant.c(496,43): warning C4100: 'other': unreferenced formal parameter
+C:\Users\brpro\git\gamemod-q2\game\m_mutant.c(574,91): warning C4100: 'point': unreferenced formal parameter
+C:\Users\brpro\git\gamemod-q2\game\m_mutant.c(574,62): warning C4100: 'attacker': unreferenced formal parameter
+C:\Users\brpro\git\gamemod-q2\game\m_mutant.c(574,42): warning C4100: 'inflictor': unreferenced formal parameter
      Creating library .\..\release\gamex86.lib and object .\..\release\gamex86.exp
   game.vcxproj -> C:\Users\brpro\git\gamemod-q2\game\release\gamex86.dll

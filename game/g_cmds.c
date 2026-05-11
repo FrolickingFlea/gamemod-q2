@@ -483,12 +483,38 @@ void Cmd_Inven_f (edict_t *ent)
 
 	cl->showinventory = true;
 
-	gi.WriteByte (svc_inventory);
-	for (i=0 ; i<MAX_ITEMS ; i++)
-	{
-		gi.WriteShort (cl->pers.inventory[i]);
-	}
-	gi.unicast (ent, true);
+	//HelpComputer(ent);
+	char	string[1024];
+	char* sk = "$500";
+
+	// send the layout
+	Com_sprintf(string, sizeof(string),
+		"xv 32 yv 8 picn help "			// background
+		"xv 202 yv 12 string2 \"%s\" "		// skill
+		"xv 0 yv 24 cstring2 \"%s\" "		// level name
+		"xv 0 yv 54 cstring2 \"%s\" "		// help 1
+		"xv 0 yv 110 cstring2 \"%s\" ",		// help 2
+		//"xv 50 yv 164 string2 \" kills     goals    secrets\" "
+		//"xv 50 yv 172 string2 \"%3i/%3i     %i/%i       %i/%i\" ", 
+		sk,
+		"Shop",
+		"[A] $100 - Test\n[B] $200 - Test Harder",
+		"Use the Keybinds\nto purchase items"
+		//level.killed_monsters, 999, //monster kills
+		//0, 1, //level goals
+		//0, 0
+	); //secrets found
+
+	gi.WriteByte(svc_layout);
+	gi.WriteString(string);
+	gi.unicast(ent, true);
+
+	//gi.WriteByte (svc_inventory);
+	//for (i=0 ; i<MAX_ITEMS ; i++)
+	//{
+	//	gi.WriteShort (cl->pers.inventory[i]);
+	//}
+	//gi.unicast (ent, true);
 }
 
 void Cmd_Shop_f(edict_t* ent)
@@ -988,6 +1014,13 @@ void ClientCommand (edict_t *ent)
 		Cmd_Notarget_f (ent);
 	else if (Q_stricmp (cmd, "noclip") == 0)
 		Cmd_Noclip_f (ent);
+	else if (Q_stricmp(cmd, "mount") == 0) {
+		if (onMount == 1) {
+			umount(ent);
+			return;
+		}
+		tryount(ent);
+	}
 	else if (Q_stricmp (cmd, "inven") == 0)
 		Cmd_Inven_f (ent);
 	else if (Q_stricmp (cmd, "invnext") == 0)
