@@ -19,13 +19,6 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 // g_local.h -- local definitions for game module
 
-static int MAX_MOUNTS = 8;
-static int MOUNT_DISTANCE = 50;
-
-static int onMount = 0; //check if player is on a horse
-static edict_t *availableMounts[];
-static int nextMountSlotFree = 0;
-
 #include "q_shared.h"
 
 // define GAME_INCLUDE so that game.h does not define the
@@ -87,6 +80,14 @@ static int nextMountSlotFree = 0;
 #define MELEE_DISTANCE	80
 
 #define BODY_QUEUE_SIZE		8
+
+static int MAX_MOUNTS = 8;
+static int MOUNT_DISTANCE = 50;
+
+static edict_t* availableMounts[8];
+static int nextMountSlotFree = 0;
+
+static int playerMoney = 100;
 
 typedef enum
 {
@@ -1069,6 +1070,9 @@ struct edict_s
 	edict_t *rider;
 	edict_t* riding;
 	int moveMultiplier;
+
+	int onMount;
+	
 	
 
 	float		powerarmor_time;
@@ -1124,4 +1128,7 @@ struct edict_s
 	moveinfo_t		moveinfo;
 	monsterinfo_t	monsterinfo;
 };
+
+
+
 

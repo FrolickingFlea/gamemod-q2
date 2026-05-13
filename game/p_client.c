@@ -24,6 +24,24 @@ void ClientUserinfoChanged (edict_t *ent, char *userinfo);
 
 void SP_misc_teleporter_dest (edict_t *ent);
 
+void moneyDisplay(edict_t* ent) {
+
+	if (ent->client->showhelp) {
+		return;
+	}
+
+	char moneyOverlay[1024];
+
+	Com_sprintf(moneyOverlay, sizeof(moneyOverlay),
+		"xr 5 yt 5 string2 \"%s\" ",			// cash amount 
+		"$500"
+	);
+
+	gi.WriteByte(svc_layout);
+	gi.WriteString(moneyOverlay);
+	gi.unicast(ent, true);
+}
+
 //
 // Gross, ugly, disgustuing hack section
 //
@@ -1179,6 +1197,7 @@ void PutClientInServer (edict_t *ent)
 	ent->watertype = 0;
 	ent->flags &= ~FL_NO_KNOCKBACK;
 	ent->svflags &= ~SVF_DEADMONSTER;
+	ent->onMount = 0;
 
 	VectorCopy (mins, ent->mins);
 	VectorCopy (maxs, ent->maxs);
@@ -1569,6 +1588,7 @@ usually be a couple times for each server frame.
 */
 void ClientThink (edict_t *ent, usercmd_t *ucmd)
 {
+
 	gclient_t	*client;
 	edict_t	*other;
 	int		i, j;
@@ -1629,6 +1649,7 @@ void ClientThink (edict_t *ent, usercmd_t *ucmd)
 		pm.trace = PM_trace;	// adds default parms
 		pm.pointcontents = gi.pointcontents;
 
+
 		// perform a pmove
 		gi.Pmove (&pm);
 
@@ -1640,8 +1661,8 @@ void ClientThink (edict_t *ent, usercmd_t *ucmd)
 
 		for (i=0 ; i<3 ; i++)
 		{
-			ent->s.origin[i] = pm.s.origin[i]*ent->moveMultiplier;
-			ent->velocity[i] = pm.s.velocity[i]*ent->moveMultiplier;
+			ent->s.origin[i] = pm.s.origin[i]*0.125;
+			ent->velocity[i] = pm.s.velocity[i]*0.125;
 		}
 
 		VectorCopy (pm.mins, ent->mins);
@@ -1743,6 +1764,8 @@ void ClientThink (edict_t *ent, usercmd_t *ucmd)
 		if (other->inuse && other->client->chase_target == ent)
 			UpdateChaseCam(other);
 	}
+
+	moneyDisplay(ent);
 }
 
 
@@ -1807,8 +1830,8 @@ void ClientBeginServerFrame (edict_t *ent)
 }
 
 void umount(edict_t *ent) {
-	onMount = 0;
-	ent->moveMultiplier = 0.125f;
+	ent->onMount = 0;
+	ent->moveMultiplier = 1;
 
 
 	//unmatch horse and player
@@ -1842,6 +1865,14 @@ void trymount(edict_t *ent) {
 	ent->riding = enttotrymounton;
 	ent->riding->rider = ent;
 	
-	onMount = 1;
-	ent->moveMultiplier = 0.25f;
+	ent->onMount = 1;
+	ent->moveMultiplier = 2;
+}
+
+int moneyDeduct(int amount) {
+	if (playerMoney >= amount) {
+		playerMoney -= amount;
+		return 1;
+	}
+	return 0;
 }

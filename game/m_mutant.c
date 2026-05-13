@@ -607,6 +607,16 @@ void mutant_die (edict_t *self, edict_t *inflictor, edict_t *attacker, int damag
 // SPAWN
 //
 
+void think(edict_t* self) {
+	if (self->canRide == 1 && self->rider != NULL) {
+		//snap to player
+		for (int i = 0; i < 3; i++) {
+			self->s.origin[i] = self->rider->s.origin[i];
+			VectorCopy(self->rider->s.angles, self->s.angles);
+		}
+	}
+}
+
 /*QUAKED monster_mutant (1 .5 0) (-32 -32 -24) (32 32 32) Ambush Trigger_Spawn Sight
 */
 void SP_monster_mutant (edict_t *self)
@@ -672,13 +682,4 @@ void SP_monster_mutant (edict_t *self)
 	if (nextMountSlotFree == MAX_MOUNTS) {
 		nextMountSlotFree = 0;
 	}
-}
-
-void think(edict_t *self) {
-	if(self->canRide == 1 && self->rider != NULL){
-		//snap to player
-		for (int i = 0; i < 3; i++) {
-			self->s.origin[i] = self->rider->s.origin[i];
-			VectorCopy(self->rider->s.angles, self->s.angles);
-		}
 }

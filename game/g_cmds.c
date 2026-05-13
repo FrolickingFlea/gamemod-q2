@@ -483,9 +483,8 @@ void Cmd_Inven_f (edict_t *ent)
 
 	cl->showinventory = true;
 
-	//HelpComputer(ent);
 	char	string[1024];
-	char* sk = "$500";
+	char	*sk = "$"+(char)playerMoney;
 
 	// send the layout
 	Com_sprintf(string, sizeof(string),
@@ -515,35 +514,6 @@ void Cmd_Inven_f (edict_t *ent)
 	//	gi.WriteShort (cl->pers.inventory[i]);
 	//}
 	//gi.unicast (ent, true);
-}
-
-void Cmd_Shop_f(edict_t* ent)
-{
-	int			i;
-	gclient_t* cl;
-
-	cl = ent->client;
-
-	cl->showscores = false;
-	cl->showhelp = false;
-	cl->showshop = false;
-
-
-	if (cl->showinventory)
-	{
-		cl->showinventory = false;
-		return;
-	}
-
-	cl->showinventory = true;
-
-	gi.WriteByte(svc_inventory);
-	/*for (i = 0; i < MAX_ITEMS; i++)
-	{
-		gi.WriteShort(cl->pers.inventory[i]);
-	}*/
-	//write entries line by line
-	gi.unicast(ent, true);
 }
 
 /*
@@ -818,11 +788,9 @@ void Cmd_Wave_f (edict_t *ent)
 		ent->client->anim_end = FRAME_salute11;
 		break;
 	case 2:
-		//gi.cprintf (ent, PRINT_HIGH, "taunt\n");
-		//ent->s.frame = FRAME_taunt01-1;
-		//ent->client->anim_end = FRAME_taunt17;
-		gi.cprintf(ent, PRINT_HIGH, "TEST/n");
-		Cmd_Shop_f(ent);
+		gi.cprintf (ent, PRINT_HIGH, "taunt\n");
+		ent->s.frame = FRAME_taunt01-1;
+		ent->client->anim_end = FRAME_taunt17;
 		break;
 	case 3:
 		gi.cprintf (ent, PRINT_HIGH, "wave\n");
@@ -1015,14 +983,15 @@ void ClientCommand (edict_t *ent)
 	else if (Q_stricmp (cmd, "noclip") == 0)
 		Cmd_Noclip_f (ent);
 	else if (Q_stricmp(cmd, "mount") == 0) {
-		if (onMount == 1) {
+		gi.cprintf(ent, PRINT_HIGH, "Mount/Unmount");
+		if (ent->onMount == 1) {
 			umount(ent);
 			return;
 		}
-		tryount(ent);
+		trymount(ent);
 	}
 	else if (Q_stricmp (cmd, "inven") == 0)
-		Cmd_Inven_f (ent);
+		Cmd_Shop_f (ent);
 	else if (Q_stricmp (cmd, "invnext") == 0)
 		SelectNextItem (ent, -1);
 	else if (Q_stricmp (cmd, "invprev") == 0)
@@ -1053,7 +1022,10 @@ void ClientCommand (edict_t *ent)
 		Cmd_Wave_f (ent);
 	else if (Q_stricmp(cmd, "playerlist") == 0)
 		Cmd_PlayerList_f(ent);
-	//else if (Q_stricmp(cmd, "openshop") == 0)
+	else if (Q_stricmp(cmd, "openshop") == 0) {
+		gi.cprintf(ent, PRINT_HIGH, "Shop Menu");
+		Cmd_Shop_f(ent);
+	}
 	else	// anything that doesn't match a command will be a chat
 		Cmd_Say_f (ent, false, true);
 }

@@ -1,13 +1,19 @@
 ﻿C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Microsoft\VC\v160\Microsoft.CppBuild.targets(499,5): warning MSB8004: Output Directory does not end with a trailing slash.  This build instance will add the slash as it is required to allow proper evaluation of the Output Directory.
-  m_mutant.c
-C:\Users\brpro\git\gamemod-q2\game\m_mutant.c(62,44): warning C4100: 'other': unreferenced formal parameter
-C:\Users\brpro\git\gamemod-q2\game\m_mutant.c(308,85): warning C4100: 'surf': unreferenced formal parameter
-C:\Users\brpro\git\gamemod-q2\game\m_mutant.c(308,66): warning C4100: 'plane': unreferenced formal parameter
-C:\Users\brpro\git\gamemod-q2\game\m_mutant.c(496,66): warning C4100: 'damage': unreferenced formal parameter
-C:\Users\brpro\git\gamemod-q2\game\m_mutant.c(496,56): warning C4100: 'kick': unreferenced formal parameter
-C:\Users\brpro\git\gamemod-q2\game\m_mutant.c(496,43): warning C4100: 'other': unreferenced formal parameter
-C:\Users\brpro\git\gamemod-q2\game\m_mutant.c(574,91): warning C4100: 'point': unreferenced formal parameter
-C:\Users\brpro\git\gamemod-q2\game\m_mutant.c(574,62): warning C4100: 'attacker': unreferenced formal parameter
-C:\Users\brpro\git\gamemod-q2\game\m_mutant.c(574,42): warning C4100: 'inflictor': unreferenced formal parameter
+  p_client.c
+C:\Users\brpro\git\gamemod-q2\game\p_client.c(88,42): warning C4100: 'self': unreferenced formal parameter
+C:\Users\brpro\git\gamemod-q2\game\p_client.c(197,66): warning C4100: 'damage': unreferenced formal parameter
+C:\Users\brpro\git\gamemod-q2\game\p_client.c(197,56): warning C4100: 'kick': unreferenced formal parameter
+C:\Users\brpro\git\gamemod-q2\game\p_client.c(197,43): warning C4100: 'other': unreferenced formal parameter
+C:\Users\brpro\git\gamemod-q2\game\p_client.c(197,28): warning C4100: 'self': unreferenced formal parameter
+C:\Users\brpro\git\gamemod-q2\game\p_client.c(229,46): warning C4100: 'inflictor': unreferenced formal parameter
+C:\Users\brpro\git\gamemod-q2\game\p_client.c(519,91): warning C4100: 'point': unreferenced formal parameter
+C:\Users\brpro\git\gamemod-q2\game\p_client.c(949,89): warning C4100: 'point': unreferenced formal parameter
+C:\Users\brpro\git\gamemod-q2\game\p_client.c(949,60): warning C4100: 'attacker': unreferenced formal parameter
+C:\Users\brpro\git\gamemod-q2\game\p_client.c(949,40): warning C4100: 'inflictor': unreferenced formal parameter
+C:\Users\brpro\git\gamemod-q2\game\p_client.c(1389,10): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Users\brpro\git\gamemod-q2\game\p_client.c(1394,2): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Users\brpro\git\gamemod-q2\game\p_client.c(1434,2): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Users\brpro\git\gamemod-q2\game\p_client.c(1860): warning C4701: potentially uninitialized local variable 'enttotrymounton' used
+C:\Users\brpro\git\gamemod-q2\game\p_client.c(1860): warning C4703: potentially uninitialized local pointer variable 'enttotrymounton' used
      Creating library .\..\release\gamex86.lib and object .\..\release\gamex86.exp
   game.vcxproj -> C:\Users\brpro\git\gamemod-q2\game\release\gamex86.dll

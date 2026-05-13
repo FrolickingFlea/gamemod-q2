@@ -328,7 +328,7 @@ void HelpComputer (edict_t *ent)
 		sk,
 		"Wild West Defense",
 		"Defend your base against\nenemy monsters",
-		"Use a the shop to purchase\ntools for your defense\nwith the K key"
+		"Use a the shop to purchase\ntools for your defense\nwith the N key"
 		//level.killed_monsters, 999, //monster kills
 		//0, 1, //level goals
 		//0, 0
@@ -552,12 +552,47 @@ void G_CheckChaseStats (edict_t *ent)
 G_SetSpectatorStats
 ===============
 */
-void G_SetSpectatorStats (edict_t *ent)
+
+
+
+
+void HelpComputerShop(edict_t* ent)
 {
-	gclient_t *cl = ent->client;
+	char	string[1024];
+	char* sk = "$500";
+
+	
+
+	// send the layout
+	Com_sprintf(string, sizeof(string),
+		"xv 32 yv 8 picn help "			// background
+		"xv 202 yv 12 string2 \"%s\" "		// skill
+		"xv 0 yv 24 cstring2 \"%s\" "		// level name
+		"xv 0 yv 54 cstring2 \"%s\" "		// help 1
+		"xv 0 yv 110 cstring2 \"%s\" ",		// help 2
+		//"xv 50 yv 164 string2 \" kills     goals    secrets\" "
+		//"xv 50 yv 172 string2 \"%3i/%3i     %i/%i       %i/%i\" ", 
+		sk,
+		"Shop",
+		"[A] $100 - Test\nAAAA",
+		"Buy items to\naid your defense"
+		//level.killed_monsters, 999, //monster kills
+		//0, 1, //level goals
+		//0, 0
+	); //secrets found
+
+	gi.WriteByte(svc_layout);
+	gi.WriteString(string);
+	gi.unicast(ent, true);
+}
+
+
+void G_SetSpectatorStats(edict_t* ent)
+{
+	gclient_t* cl = ent->client;
 
 	if (!cl->chase_target)
-		G_SetStats (ent);
+		G_SetStats(ent);
 
 	cl->ps.stats[STAT_SPECTATOR] = 1;
 
@@ -569,9 +604,26 @@ void G_SetSpectatorStats (edict_t *ent)
 		cl->ps.stats[STAT_LAYOUTS] |= 2;
 
 	if (cl->chase_target && cl->chase_target->inuse)
-		cl->ps.stats[STAT_CHASE] = CS_PLAYERSKINS + 
-			(cl->chase_target - g_edicts) - 1;
+		cl->ps.stats[STAT_CHASE] = CS_PLAYERSKINS +
+		(cl->chase_target - g_edicts) - 1;
 	else
 		cl->ps.stats[STAT_CHASE] = 0;
+}
+
+void Cmd_Shop_f(edict_t* ent)
+{
+	ent->client->showinventory = false;
+	ent->client->showscores = false;
+	ent->client->showshop = false;
+
+
+	if (ent->client->showshop)
+	{
+		ent->client->showshop = false;
+		return;
+	}
+
+	ent->client->showshop = true;
+	HelpComputerShop(ent);
 }
 
