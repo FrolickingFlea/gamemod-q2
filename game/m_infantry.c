@@ -216,6 +216,8 @@ void infantry_pain (edict_t *self, edict_t *other, float kick, int damage)
 {
 	int		n;
 
+	playerMoney += 10;
+
 	if (self->health < (self->max_health / 2))
 		self->s.skinnum = 1;
 
@@ -385,7 +387,7 @@ mmove_t infantry_move_death3 = {FRAME_death301, FRAME_death309, infantry_frames_
 
 void infantry_die (edict_t *self, edict_t *inflictor, edict_t *attacker, int damage, vec3_t point)
 {
-	playerMoney += 100;
+	moneyIncrease(100);
 
 	int		n;
 
@@ -584,7 +586,7 @@ void SP_monster_infantry (edict_t *self)
 	VectorSet (self->mins, -16, -16, -24);
 	VectorSet (self->maxs, 16, 16, 32);
 
-	self->health = 100;
+	self->health = 80;
 	self->gib_health = -40;
 	self->mass = 200;
 

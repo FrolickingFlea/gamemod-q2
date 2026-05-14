@@ -317,19 +317,27 @@ void HelpComputer (edict_t *ent)
 		sk = "hard+";
 
 	// send the layout
-	Com_sprintf (string, sizeof(string),
+	Com_sprintf(string, sizeof(string),
 		"xv 32 yv 8 picn help "			// background
 		"xv 202 yv 12 string2 \"%s\" "		// skill
 		"xv 0 yv 24 cstring2 \"%s\" "		// level name
 		"xv 0 yv 54 cstring2 \"%s\" "		// help 1
-		"xv 0 yv 110 cstring2 \"%s\" ",		// help 2
+		"xv 0 yv 110 cstring2 \"%s\" "		// help 2
+		"xv 140 yv 164 string2 \"kills\" "		// help 2
+		"xv 140 yv 172 string2 \"%3i\" "		// help 2
+		"xv 290 yv 24 string2 \"Brads Recruited\" "		// help 2
+		"xv 290 yv 32 string2 \"%i\" "
+		"xv 290 yv 48 string2 \"horse\" "		// help 2
+		"xv 290 yv 56 string2 \"%i/%i\" ",
 		//"xv 50 yv 164 string2 \" kills     goals    secrets\" "
 		//"xv 50 yv 172 string2 \"%3i/%3i     %i/%i       %i/%i\" ", 
 		sk,
 		"Wild West Defense",
 		"Defend your base against\nenemy monsters",
-		"Use a the shop to purchase\ntools for your defense\nwith the N key"
-		//level.killed_monsters, 999, //monster kills
+		"Use a the shop commands\nto purchase tools\nView Shop using [TAB]",
+		level.killed_monsters,//, 999, //monster kills
+		getBrads(),
+		getHasHorse(),1
 		//0, 1, //level goals
 		//0, 0
 		); //secrets found
@@ -625,5 +633,65 @@ void Cmd_Shop_f(edict_t* ent)
 
 	ent->client->showshop = true;
 	HelpComputerShop(ent);
+}
+
+void showMoney(edict_t* ent) {
+	gi.cprintf(ent, PRINT_HIGH, "$");
+	gi.cprintf(ent, PRINT_HIGH, (char)playerMoney);
+	gi.cprintf(ent, PRINT_HIGH, "\n");
+}
+
+void Cmd_Inven_f(edict_t* ent)
+{
+	int			i;
+	gclient_t* cl;
+
+	cl = ent->client;
+
+	cl->showscores = false;
+	cl->showhelp = false;
+	cl->showshop = false;
+
+
+	if (cl->showhelp)
+	{
+		cl->showhelp = false;
+		return;
+	}
+
+	cl->showhelp = true;
+
+	char data[1024];
+	//sprintf(data, "xr 5 yt 5 %s", "Test");
+	Com_sprintf(data, sizeof(data),
+		"xv 32 yv 8 picn help "			// background
+		"xv 202 yv 12 string2 \"%s\" "		// skill
+		"xv 0 yv 24 cstring2 \"%s\" "		// level name
+		"xv 0 yv 54 cstring2 \"%s\" "		// help 1
+		"xv 0 yv 110 cstring2 \"%s\" "
+		"xv 0 yv 164 string2 \"kills\""
+		"xv 0 yv 172 string2 \"%3i\"",		// help 2
+		//"xv 50 yv 164 string2 \" kills     goals    secrets\" "
+		//"xv 50 yv 172 string2 \"%3i/%3i     %i/%i       %i/%i\" ", 
+		"coop",
+		"Wild West Defense",
+		"Defend your base against\nenemy monsters",
+		"Use a the shop to purchase\ntools for your defense\nwith the N key",
+		level.killed_monsters//, 999, //monster kills
+		//0, 1, //level goals
+		//0, 0
+	); //secrets found
+
+	gi.WriteByte(svc_layout);
+	gi.WriteString(data);
+
+	gi.unicast(ent, true);
+
+	/*gi.WriteByte(svc_inventory);
+	for (i=0 ; i<MAX_ITEMS ; i++)
+	{
+		gi.WriteShort(cl->pers.inventory[i]);
+	}
+	gi.unicast (ent, true);*/
 }
 

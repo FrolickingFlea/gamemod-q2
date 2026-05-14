@@ -89,6 +89,8 @@ static int nextMountSlotFree = 0;
 
 static int playerMoney = 100;
 
+static vec3_t spawnPos;
+
 typedef enum
 {
 	DAMAGE_NO,
@@ -1070,6 +1072,7 @@ struct edict_s
 	edict_t *rider;
 	edict_t* riding;
 	int moveMultiplier;
+
 
 	int onMount;
 	

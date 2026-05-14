@@ -597,13 +597,13 @@ void SP_monster_gunner (edict_t *self)
 	gi.soundindex ("gunner/gunatck2.wav");
 	gi.soundindex ("gunner/gunatck3.wav");
 
-	self->movetype = MOVETYPE_STEP;
+	self->movetype = MOVETYPE_NONE;
 	self->solid = SOLID_BBOX;
 	self->s.modelindex = gi.modelindex ("models/monsters/gunner/tris.md2");
 	VectorSet (self->mins, -16, -16, -24);
 	VectorSet (self->maxs, 16, 16, 32);
 
-	self->health = 175;
+	self->health = 100;
 	self->gib_health = -70;
 	self->mass = 200;
 
@@ -611,13 +611,13 @@ void SP_monster_gunner (edict_t *self)
 	self->die = gunner_die;
 
 	self->monsterinfo.stand = gunner_stand;
-	self->monsterinfo.walk = gunner_walk;
-	self->monsterinfo.run = gunner_run;
-	self->monsterinfo.dodge = gunner_dodge;
-	self->monsterinfo.attack = gunner_attack;
+	self->monsterinfo.walk = gunner_stand;
+	self->monsterinfo.run = gunner_stand;
+	self->monsterinfo.dodge = gunner_stand;
+	self->monsterinfo.attack = gunner_stand;
 	self->monsterinfo.melee = NULL;
-	self->monsterinfo.sight = gunner_sight;
-	self->monsterinfo.search = gunner_search;
+	self->monsterinfo.sight = gunner_stand;
+	self->monsterinfo.search = gunner_stand;
 
 	gi.linkentity (self);
 

@@ -338,6 +338,8 @@ mmove_t actor_move_death2 = {FRAME_death201, FRAME_death213, actor_frames_death2
 
 void actor_die (edict_t *self, edict_t *inflictor, edict_t *attacker, int damage, vec3_t point)
 {
+	playerMoney += 100;
+
 	int		n;
 
 // check for gib

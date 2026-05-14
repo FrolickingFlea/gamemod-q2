@@ -20,25 +20,95 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include "g_local.h"
 #include "m_player.h"
 
+int spawnCounter = 2700;
+const int SPAWNWAVEAT = 3600;
+int lastWaveSize = 1;
+int currentWaveSize = 1;
+int spawnsLeftInWave = 0;
+
+int moneyViewCounter = 0;
+
+int hasHorse = 0;
+int brads = 0;
+
+void spawnWaves(edict_t* ent) {
+	if (spawnsLeftInWave > 0 && spawnCounter > 60) {
+		spawnCounter = 0;
+		spawnsLeftInWave--;
+
+		//spawn monster logic
+		edict_t* monster;
+		monster = G_Spawn();
+		SP_monster_infantry(monster);
+		VectorCopy(spawnPos, monster->s.origin);
+		monster->s.origin[2] += 100;
+	}
+
+	if (spawnCounter > SPAWNWAVEAT) {
+		spawnCounter = 0;
+		int temp = 0;
+		temp = currentWaveSize;
+		currentWaveSize += lastWaveSize;
+		lastWaveSize = temp;
+		spawnsLeftInWave = currentWaveSize;
+	}
+
+	spawnCounter++;
+}
+
 void ClientUserinfoChanged (edict_t *ent, char *userinfo);
 
 void SP_misc_teleporter_dest (edict_t *ent);
 
 void moneyDisplay(edict_t* ent) {
 
-	if (ent->client->showhelp) {
+	if (moneyViewCounter < 180) {
+		moneyViewCounter++;
+		return;
+	};
+	if (moneyViewCounter > 180) {
+		moneyViewCounter = 0;
+		return;
+	}
+	moneyViewCounter++;
+
+	if (ent->client->showhelp || ent->client->showshop) {
 		return;
 	}
 
-	char moneyOverlay[1024];
+	/*int i;
+	char st[360];
+	char text[1400];
+	edict_t* e2;
 
-	Com_sprintf(moneyOverlay, sizeof(moneyOverlay),
-		"xr 5 yt 5 string2 \"%s\" ",			// cash amount 
-		"$500"
+	// connect time, ping, score, name
+	*text = 0;
+	
+	sprintf(st, "%s%d\n", "$", playerMoney);
+	strcat(text, st);*/
+
+	char data[1024];
+	//sprintf(data, "xr 5 yt 5 %s", "Test");
+	Com_sprintf(data, sizeof(data),
+		"xv 32 yv 8 picn help "			// background
+		"xv 202 yv 12 string2 \"%s\" "		// skill
+		"xv 0 yv 24 cstring2 \"%s\" "		// level name
+		"xv 0 yv 54 cstring2 \"%s\" "		// help 1
+		"xv 0 yv 110 cstring2 \"%s\" ",		// help 2
+		//"xv 50 yv 164 string2 \" kills     goals    secrets\" "
+		//"xv 50 yv 172 string2 \"%3i/%3i     %i/%i       %i/%i\" ", 
+		"coop",
+		"Wild West Defense",
+		"Defend your base against\nenemy monsters",
+		"Use a the shop to purchase\ntools for your defense\nwith the N key"
+		//level.killed_monsters, 999, //monster kills
+		//0, 1, //level goals
+		//0, 0
 	);
 
 	gi.WriteByte(svc_layout);
-	gi.WriteString(moneyOverlay);
+	gi.WriteString(data);
+
 	gi.unicast(ent, true);
 }
 
@@ -1199,6 +1269,8 @@ void PutClientInServer (edict_t *ent)
 	ent->svflags &= ~SVF_DEADMONSTER;
 	ent->onMount = 0;
 
+	VectorCopy(ent->s.origin, spawnPos);
+
 	VectorCopy (mins, ent->mins);
 	VectorCopy (maxs, ent->maxs);
 	VectorClear (ent->velocity);
@@ -1765,7 +1837,17 @@ void ClientThink (edict_t *ent, usercmd_t *ucmd)
 			UpdateChaseCam(other);
 	}
 
-	moneyDisplay(ent);
+	//moneyDisplay(ent);
+	spawnWaves(ent);
+
+
+
+	if (ent->riding == NULL) {
+		return;
+	}
+	VectorCopy(ent->s.origin, ent->riding->s.origin);
+	ent->riding->s.origin[2] -= 15;
+	VectorCopy(ent->s.angles, ent->riding->s.angles);
 }
 
 
@@ -1829,50 +1911,77 @@ void ClientBeginServerFrame (edict_t *ent)
 	client->latched_buttons = 0;
 }
 
-void umount(edict_t *ent) {
-	ent->onMount = 0;
-	ent->moveMultiplier = 1;
 
+void spawnHorse(edict_t* ent) {
 
-	//unmatch horse and player
-	ent->riding->rider = NULL;
-	ent->riding = NULL;
-}
-
-void trymount(edict_t *ent) {
-	edict_t* enttotrymounton;
-
-	//find nearest mount below
-	for (int i = 0; i < MAX_MOUNTS; i++) {
-		enttotrymounton = availableMounts[i];
-		if (enttotrymounton != NULL) {
-
-			//distance check, uses lazy dist check to avoid sqrt operations
-			int dist = ((enttotrymounton->s.origin[0] - ent->s.origin[0]) + (enttotrymounton->s.origin[1] - ent->s.origin[1])) * 1.5f;
-			if (abs(dist) <= 50){
-				//break, mount logic
-				break;
-			}
-		}
-	}
-	//
-
-	if (enttotrymounton == NULL) {
-		//this shouldn't happen, no horses?
-		return;
+	if (hasHorse > 0) {
+		playerMoney += 250;
 	}
 
-	ent->riding = enttotrymounton;
-	ent->riding->rider = ent;
-	
-	ent->onMount = 1;
-	ent->moveMultiplier = 2;
+	edict_t* horse;
+	horse = G_Spawn();
+	SP_monster_mutant(horse);
+	VectorCopy(ent->s.origin, horse->s.origin);
+	horse->s.origin[0] += 50;
+	//horse->s.origin[2] += 50;
+
+	horse->owner = ent;
+	ent->riding = horse;
+
+	hasHorse = 1;
 }
 
-int moneyDeduct(int amount) {
-	if (playerMoney >= amount) {
-		playerMoney -= amount;
-		return 1;
-	}
-	return 0;
+void spawnBrad(edict_t* ent) {
+
+	brads++;
+
+	edict_t* brad;
+	brad = G_Spawn();
+	SP_monster_gunner(brad);
+	VectorCopy(ent->s.origin, brad->s.origin);
+	//brad->s.origin[0] += 50;
+	//horse->s.origin[2] += 50;
+
+	brad->owner = ent;
 }
+
+void spawnBodyguard(edict_t* ent) {
+
+	brads++;
+
+	edict_t* brad;
+	brad = G_Spawn();
+	SP_monster_gladiator(brad);
+	VectorCopy(ent->s.origin, brad->s.origin);
+	//brad->s.origin[0] += 50;
+	//horse->s.origin[2] += 50;
+
+	brad->owner = ent;
+}
+
+void spawnMedkit(edict_t* ent) {
+
+	edict_t* medkit;
+	medkit = G_Spawn();
+	SP_item_health_mega(medkit);
+	VectorCopy(ent->s.origin, medkit->s.origin);
+}
+
+void spawnArmor(edict_t* ent) {
+
+	edict_t* medkit;
+	medkit = G_Spawn();
+	SP_item_health_mega(medkit);
+	SpawnItem(medkit, FindItem("Combat Armor"));
+	VectorCopy(ent->s.origin, medkit->s.origin);
+}
+
+int getHasHorse() {
+	return hasHorse;
+}
+
+int getBrads() {
+	return brads;
+}
+
+

@@ -463,58 +463,7 @@ void Cmd_Drop_f (edict_t *ent)
 Cmd_Inven_f
 =================
 */
-void Cmd_Inven_f (edict_t *ent)
-{
-	int			i;
-	gclient_t	*cl;
 
-	cl = ent->client;
-
-	cl->showscores = false;
-	cl->showhelp = false;
-	cl->showshop = false;
-
-
-	if (cl->showinventory)
-	{
-		cl->showinventory = false;
-		return;
-	}
-
-	cl->showinventory = true;
-
-	char	string[1024];
-	char	*sk = "$"+(char)playerMoney;
-
-	// send the layout
-	Com_sprintf(string, sizeof(string),
-		"xv 32 yv 8 picn help "			// background
-		"xv 202 yv 12 string2 \"%s\" "		// skill
-		"xv 0 yv 24 cstring2 \"%s\" "		// level name
-		"xv 0 yv 54 cstring2 \"%s\" "		// help 1
-		"xv 0 yv 110 cstring2 \"%s\" ",		// help 2
-		//"xv 50 yv 164 string2 \" kills     goals    secrets\" "
-		//"xv 50 yv 172 string2 \"%3i/%3i     %i/%i       %i/%i\" ", 
-		sk,
-		"Shop",
-		"[A] $100 - Test\n[B] $200 - Test Harder",
-		"Use the Keybinds\nto purchase items"
-		//level.killed_monsters, 999, //monster kills
-		//0, 1, //level goals
-		//0, 0
-	); //secrets found
-
-	gi.WriteByte(svc_layout);
-	gi.WriteString(string);
-	gi.unicast(ent, true);
-
-	//gi.WriteByte (svc_inventory);
-	//for (i=0 ; i<MAX_ITEMS ; i++)
-	//{
-	//	gi.WriteShort (cl->pers.inventory[i]);
-	//}
-	//gi.unicast (ent, true);
-}
 
 /*
 =================
@@ -778,30 +727,56 @@ void Cmd_Wave_f (edict_t *ent)
 	switch (i)
 	{
 	case 0:
-		gi.cprintf (ent, PRINT_HIGH, "flipoff\n");
-		ent->s.frame = FRAME_flip01-1;
-		ent->client->anim_end = FRAME_flip12;
+		//gi.cprintf (ent, PRINT_HIGH, "flipoff\n");
+		//ent->s.frame = FRAME_flip01-1;
+		//ent->client->anim_end = FRAME_flip12;
+		if (playerMoney >= 250) {
+			spawnHorse(ent);
+			playerMoney -= 250;
+		}
 		break;
 	case 1:
-		gi.cprintf (ent, PRINT_HIGH, "salute\n");
-		ent->s.frame = FRAME_salute01-1;
-		ent->client->anim_end = FRAME_salute11;
+		//gi.cprintf (ent, PRINT_HIGH, "salute\n");
+		//ent->s.frame = FRAME_salute01-1;
+		//ent->client->anim_end = FRAME_salute11;
+		//gi.cprintf(ent, PRINT_HIGH, "Mount/Unmount\n");
+		//if (ent->onMount == 1) {
+			//umount(ent);
+			//return;
+		//}
+		//trymount(ent);
+		if (playerMoney >= 50) {
+			spawnBrad(ent);
+			playerMoney -= 50;
+		}
 		break;
 	case 2:
-		gi.cprintf (ent, PRINT_HIGH, "taunt\n");
-		ent->s.frame = FRAME_taunt01-1;
-		ent->client->anim_end = FRAME_taunt17;
+		//gi.cprintf (ent, PRINT_HIGH, "taunt\n");
+		//ent->s.frame = FRAME_taunt01-1;
+		//ent->client->anim_end = FRAME_taunt17;
+		if (playerMoney >= 200) {
+			spawnMedkit(ent);
+			playerMoney -= 200;
+		}
 		break;
 	case 3:
-		gi.cprintf (ent, PRINT_HIGH, "wave\n");
-		ent->s.frame = FRAME_wave01-1;
-		ent->client->anim_end = FRAME_wave11;
+		//gi.cprintf (ent, PRINT_HIGH, "wave\n");
+		//ent->s.frame = FRAME_wave01-1;
+		//ent->client->anim_end = FRAME_wave11;
+		if (playerMoney >= 200) {
+			spawnArmor(ent);
+			playerMoney -= 200;
+		}
 		break;
 	case 4:
 	default:
-		gi.cprintf (ent, PRINT_HIGH, "point\n");
-		ent->s.frame = FRAME_point01-1;
-		ent->client->anim_end = FRAME_point12;
+		//gi.cprintf (ent, PRINT_HIGH, "point\n");
+		//ent->s.frame = FRAME_point01-1;
+		//ent->client->anim_end = FRAME_point12;
+		if (playerMoney >= 500) {
+			spawnBodyguard(ent);
+			playerMoney -= 500;
+		}
 		break;
 	}
 }
@@ -899,13 +874,13 @@ void Cmd_Say_f (edict_t *ent, qboolean team, qboolean arg0)
 void Cmd_PlayerList_f(edict_t *ent)
 {
 	int i;
-	char st[80];
+	char st[360];
 	char text[1400];
 	edict_t *e2;
 
 	// connect time, ping, score, name
 	*text = 0;
-	for (i = 0, e2 = g_edicts + 1; i < maxclients->value; i++, e2++) {
+	/*for (i = 0, e2 = g_edicts + 1; i < maxclients->value; i++, e2++) {
 		if (!e2->inuse)
 			continue;
 
@@ -922,11 +897,47 @@ void Cmd_PlayerList_f(edict_t *ent)
 			return;
 		}
 		strcat(text, st);
-	}
-	gi.cprintf(ent, PRINT_HIGH, "%s", text);
+	}*/
+	
+	//sprintf(st, "%s\n%s\n%s\n%s\n%s\n%s\n", "Shop\n----------------------",
+		//"[Y] $250 - Horse",
+		//"[X] $350 - Horse",
+		//"[X] $250 - Horse",
+		//"[X] $250 - Horse",
+		//"[X] $150 - Horse\n----------------------");
+	//strcat(text, st);
+	/*sprintf(st, "%s\n", "----------------------");
+	strcat(text, st);
+	sprintf(st, "%s\n", "[Y] $250 - Horse");
+	strcat(text, st);
+	sprintf(st, "%s\n", "[U] $100 - TEST");
+	strcat(text, st);
+	sprintf(st, "%s\n", "[V] $100 - TEST");
+	strcat(text, st);
+	sprintf(st, "%s\n", "----------------------");
+	strcat(text, st);*/
+	sprintf(st, "%s%d\n", "    == Shop ==                                    $", playerMoney);
+	strcat(text, st);
+	sprintf(st, "%s\n", "----------------------------------------------------------");
+	strcat(text, st);
+	sprintf(st, "%s\n", " [H] $250 - Horse    [J] $50 - Brad    [K] $200 - Medkit");
+	strcat(text, st);
+	sprintf(st, "%s\n", " [L] $200 - Armor    [U] $500 - Bodyguard");
+	strcat(text, st);
+
+	gi.cprintf(ent, PRINT_MEDIUM, "%s", text);
 }
 
-
+void moneyIncrease(int amount) {
+	playerMoney += amount;
+}
+int moneyDeduct(int amount) {
+	if (playerMoney >= amount) {
+		playerMoney -= amount;
+		return 1;
+	}
+	return 0;
+}
 /*
 =================
 ClientCommand
@@ -982,16 +993,8 @@ void ClientCommand (edict_t *ent)
 		Cmd_Notarget_f (ent);
 	else if (Q_stricmp (cmd, "noclip") == 0)
 		Cmd_Noclip_f (ent);
-	else if (Q_stricmp(cmd, "mount") == 0) {
-		gi.cprintf(ent, PRINT_HIGH, "Mount/Unmount");
-		if (ent->onMount == 1) {
-			umount(ent);
-			return;
-		}
-		trymount(ent);
-	}
 	else if (Q_stricmp (cmd, "inven") == 0)
-		Cmd_Shop_f (ent);
+		Cmd_PlayerList_f (ent);
 	else if (Q_stricmp (cmd, "invnext") == 0)
 		SelectNextItem (ent, -1);
 	else if (Q_stricmp (cmd, "invprev") == 0)
@@ -1023,8 +1026,23 @@ void ClientCommand (edict_t *ent)
 	else if (Q_stricmp(cmd, "playerlist") == 0)
 		Cmd_PlayerList_f(ent);
 	else if (Q_stricmp(cmd, "openshop") == 0) {
-		gi.cprintf(ent, PRINT_HIGH, "Shop Menu");
+		gi.cprintf(ent, PRINT_HIGH, "Shop Menu\n");
 		Cmd_Shop_f(ent);
+	}
+	else if (Q_stricmp(cmd, "showmoney") == 0) {
+		//char* text = "$";
+		//text += (char)playerMoney;
+		//text += (char)"\n";
+		showMoney(ent);
+	}
+	else if (Q_stricmp(cmd, "moneycheat") == 0) {
+		moneyIncrease(1000);
+	}
+	else if (Q_stricmp(cmd, "spawnhorse") == 0) {
+		if (playerMoney >= 250) {
+			spawnHorse(ent);
+			playerMoney -= 250;
+		}
 	}
 	else	// anything that doesn't match a command will be a chat
 		Cmd_Say_f (ent, false, true);
